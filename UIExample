@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/FwedsW/Sources/main/UISource"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/FwedsW/Sources/main/UISource"))()
 
 LoadUi('fire<font color="#FF3E28">.lol</font>', 'RightShift')
 
