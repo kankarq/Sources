@@ -1,0 +1,126 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FwedsW/Sources/main/UISource"))()
+
+LoadUi('fire<font color="#FF3E28">.lol</font>', 'RightShift')
+
+local aimbotTab = library:addTab("Aiming")
+local visualTab = library:addTab("Visuals")
+----
+local aimbotConfig = aimbotTab:createGroup('left', 'Camlock')
+local resolverConfig = aimbotTab:createGroup('right', 'Resolver')
+--
+local fovConfig = visualTab:createGroup('right', 'Circle')
+
+aimbotConfig:addToggle({
+	text = "Enabled", 
+	flag = false, 
+	callback = function(v)
+		print(v)
+	end
+})
+
+aimbotConfig:addKeybind({
+	text = "Keybind", 
+	flag = "Key", 
+	callback = function(v)
+		print(v)
+	end
+})
+
+aimbotConfig:addSlider({
+	text = "Smoothness",
+	flag = "Smoothing",
+	min = 0,
+	max = 2,
+	value = 0.5,
+	decimals = 2,
+	callback = function(v)
+		print(v)
+	end
+}, '/2')
+
+aimbotConfig:addList({
+	text = "Prediction Method", 
+	flag = "PredictionMethods", 
+	values = {"Division", "Multiplication"}, 
+	multiselect = false, 
+	skipflag = false, 
+	callback = function(v)
+		print(v)
+	end
+})
+
+aimbotConfig:addSlider({
+	text = "Prediction Div",
+	flag = "Predicting",
+	min = 0,
+	max = 10,
+	value = 5,
+	decimals = 1,
+	callback = function(v)
+		print(v)
+	end
+}, '/10')
+
+aimbotConfig:addSlider({
+	text = "Prediction Mul",
+	flag = "Predicting",
+	min = 0,
+	max = 0.35,
+	value = 0.15,
+	decimals = 3,
+	callback = function(v)
+		print(v)
+	end
+}, '/0.5')
+
+resolverConfig:addToggle({
+	text = "Enabled", 
+	flag = false, 
+	callback = function(v)
+		print(v)
+	end
+})
+
+resolverConfig:addList({
+	text = "Method", 
+	flag = "Methods", 
+	values = {"Recalculate", "Delta"}, 
+	multiselect = false, 
+	skipflag = false, 
+	callback = function(v)
+		print(v)
+	end
+})
+
+fovConfig:addToggle({
+	text = "Visible", 
+	flag = false, 
+	callback = function(v)
+		print(v)
+	end
+})
+
+fovConfig:addSlider({
+	text = "Radius",
+	flag = "FovSize",
+	min = 5,
+	max = 500,
+	value = 50,
+	decimals = 0,
+	callback = function(v)
+		print(v)
+	end
+}, '/500')
+
+fovConfig:addColorpicker({
+	text = "Color",
+	ontop = true,
+	flag = "FovColor",
+	color = Color3.new(1, 1, 1),
+	callback = function(v)
+		print(v)
+	end
+})
+
+--[[uisettings:addTextbox({text = "Menu Title",flag = "menutitle"})
+configsettings:addButton({text = "Server Hop"})]]
