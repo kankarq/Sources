@@ -122,5 +122,5 @@ fovConfig:addColorpicker({
 	end
 })
 
---[[uisettings:addTextbox({text = "Menu Title",flag = "menutitle"})
-configsettings:addButton({text = "Server Hop"})]]
+--[[exampleconfig:addTextbox({text = "Text box",flag = "Text"})
+exampleconfig:addButton({text = "Button"})]]
