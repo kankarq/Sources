@@ -1450,3 +1450,5 @@ function LoadUi(Name, Key)
 		return tab
 	end
 end
+
+return library
