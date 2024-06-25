@@ -11,10 +11,54 @@ local mouse          = localPlayer:GetMouse()
 local menu           = game:GetObjects("rbxassetid://18170805458")[1]
 menu.bg.Position     = UDim2.new(0.5,-menu.bg.Size.X.Offset/2,0.5,-menu.bg.Size.Y.Offset/2)
 menu.Parent          = game:GetService("CoreGui")
-local library = {colorpicking = false;tabbuttons = {};tabs = {};options = {};flags = {};scrolling = true;playing = false;multiZindex = 200;toInvis = {};libColor = Color3.fromRGB(255, 60, 40);disabledcolor = Color3.fromRGB(233, 0, 0);blacklisted = {Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.UserInputType.MouseMovement}}
+local library = {colorpicking = false;tabbuttons = {};tabs = {};options = {};flags = {};scrolling = true;playing = false;multiZindex = 200;toInvis = {};libColor = Color3.fromRGB(255, 60, 40);disabledcolor = Color3.fromRGB(233, 0, 0);blacklisted = {Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.UserInputType.MouseMovement,Enum.UserInputType.MouseButton1}}
 
-function draggable(a)local b=inputService;local c;local d;local e;local f;local function g(h)if not library.colorpicking then local i=h.Position-e;a.Position=UDim2.new(f.X.Scale,f.X.Offset+i.X,f.Y.Scale,f.Y.Offset+i.Y)end end;a.InputBegan:Connect(function(h)if h.UserInputType==Enum.UserInputType.MouseButton1 or h.UserInputType==Enum.UserInputType.Touch then c=true;e=h.Position;f=a.Position;h.Changed:Connect(function()if h.UserInputState==Enum.UserInputState.End then c=false end end)end end)a.InputChanged:Connect(function(h)if h.UserInputType==Enum.UserInputType.MouseMovement or h.UserInputType==Enum.UserInputType.Touch then d=h end end)b.InputChanged:Connect(function(h)if h==d and c then g(h)end end)end
+function draggable(a)
+	local b = inputService;
+	local c;
+	local d;
+	local e;
+	local f;
+	local TweenService = game:GetService("TweenService")
+
+	local function g(h)
+		if not library.colorpicking then
+			local i = h.Position - e;
+			local targetPosition = UDim2.new(f.X.Scale, f.X.Offset + i.X, f.Y.Scale, f.Y.Offset + i.Y)
+			local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+			local tween = TweenService:Create(a, tweenInfo, {Position = targetPosition})
+			tween:Play()
+		end
+	end
+
+	a.InputBegan:Connect(function(h)
+		if h.UserInputType == Enum.UserInputType.MouseButton1 or h.UserInputType == Enum.UserInputType.Touch then
+			c = true; 
+			e = h.Position;
+			f = a.Position;
+			h.Changed:Connect(function()
+				if h.UserInputState == Enum.UserInputState.End then 
+					c = false 
+				end 
+			end)
+		end
+	end)
+
+	a.InputChanged:Connect(function(h)
+		if h.UserInputType == Enum.UserInputType.MouseMovement or h.UserInputType == Enum.UserInputType.Touch then 
+			d = h 
+		end 
+	end)
+
+	b.InputChanged:Connect(function(h)
+		if h == d and c then 
+			g(h)
+		end 
+	end)
+end
+
 draggable(menu.bg)
+
 
 local tabholder = menu.bg.bg.bg.bg.main.group
 local tabviewer = menu.bg.bg.bg.bg.tabbuttons
@@ -43,8 +87,18 @@ function library:Tween(...)
 end
 local playing
 
-function LoadUi(Name, Key)
+function LoadUi(Name, Key, Color)
 	menu.bg.pre.Text = Name or 'nil'
+	
+	menu.bg.ImageLabel1.ImageColor3 = Color
+	menu.bg.ImageLabel2.ImageColor3 = Color
+	menu.bg.ImageLabel3.ImageColor3 = Color
+	menu.bg.ImageLabel4.ImageColor3 = Color
+	menu.bg.ImageLabel5.ImageColor3 = Color
+	menu.bg.ImageLabel6.ImageColor3 = Color
+	menu.bg.ImageLabel7.ImageColor3 = Color
+	
+	menu.bg.bg.bg.bg.element.BackgroundColor3 = Color
 	
 	inputService.InputEnded:Connect(function(key)
 		if key.KeyCode == Enum.KeyCode[Key] then
@@ -56,6 +110,8 @@ function LoadUi(Name, Key)
 			end
 		end
 	end)
+	
+	library.libColor = Color
 	
 	function library:addTab(name)
 		local newTab = tabholder.tab:Clone()
@@ -71,7 +127,7 @@ function LoadUi(Name, Key)
 		newButton.Visible = true
 		newButton.text.Text = name
 		newButton.text.TextSize = 12
-		newButton.text.Position = UDim2.new(0, 0, 0, -2)
+		newButton.text.Position = UDim2.new(0, 0, 0, -1)
 		newButton.MouseButton1Click:Connect(function()
 			for i,v in next, library.tabs do
 				v.Visible = v == newTab
@@ -81,15 +137,15 @@ function LoadUi(Name, Key)
 			end
 			for i,v in next, library.tabbuttons do
 				local state = v == newButton
-				v.element.Position = UDim2.new(0, 35, 0, 18)
+				v.element.Position = UDim2.new(0, 42, 0, 18)
 				v.element.Size = UDim2.new(0, 0, 0, 1)
 				if state then
 					v.element.Visible = true
-					v.element.BackgroundColor3 = Color3.fromRGB(255, 60, 40)
-					library:Tween(v.element, TweenInfo.new(.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.000, Size = UDim2.new(0, 60, 0, 1)})
+					v.element.BackgroundColor3 = Color
+					library:Tween(v.element, TweenInfo.new(.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.000, Size = UDim2.new(0, 60, 0, 1)})
 					v.text.TextColor3 = Color3.fromRGB(244, 244, 244)
 				else
-					library:Tween(v.element, TweenInfo.new(.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1.000, Size = UDim2.new(0, 0, 0, 0)})
+					library:Tween(v.element, TweenInfo.new(.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1.000, Size = UDim2.new(0, 0, 0, 0)})
 					v.text.TextColor3 = Color3.fromRGB(144, 144, 144)
 				end
 			end
@@ -115,11 +171,11 @@ function LoadUi(Name, Key)
 			groupbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			groupbox.BorderColor3 = Color3.fromRGB(30, 30, 30)
 			groupbox.BorderSizePixel = 2
-			groupbox.Size = UDim2.new(0, 211, 0, 8)
+			groupbox.Size = UDim2.new(0, 300, 0, 8)
 			groupbox.ZIndex = groupCount
 
 			grouper.Parent = groupbox
-			grouper.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			grouper.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 			grouper.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			grouper.Size = UDim2.new(1, 0, 1, 0)
 
@@ -191,7 +247,7 @@ function LoadUi(Name, Key)
 
 				mid.Name = "mid"
 				mid.Parent = tobble
-				mid.BackgroundColor3 = Color3.fromRGB(255, 60, 40)
+				mid.BackgroundColor3 = Color
 				mid.BorderColor3 = Color3.fromRGB(30,30,30)
 				mid.BorderSizePixel = 2
 				mid.Size = UDim2.new(0, 10, 0, 10)
@@ -206,7 +262,7 @@ function LoadUi(Name, Key)
 				text.Parent = toggleframe
 				text.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 				text.BackgroundTransparency = 1.000
-				text.Position = UDim2.new(0, 22, 0, 0)
+				text.Position = UDim2.new(0, 28, 0, 0)
 				text.Size = UDim2.new(0, 0, 1, 2)
 				text.Font = Enum.Font.Code
 				text.Text = args.text or args.flag
@@ -238,18 +294,22 @@ function LoadUi(Name, Key)
 					state = newState
 					library.flags[args.flag] = state
 					front.BackgroundColor3 = state and library.libColor or Color3.fromRGB(15,15,15)
-					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(144, 144, 144)
+					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(255, 255, 255)
 					if args.callback then
 						args.callback(state)
 					end
 				end
 				button.MouseButton1Click:Connect(function()
 					state = not state
+					if state then 
+						library:Tween(front, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = library.libColor})
+					else 
+						front.BackgroundColor3 = Color3.fromRGB(15,15,15)
+					end
 					front.Name = state and "accent" or "back"
 					library.flags[args.flag] = state
 					mid.BorderColor3 = Color3.fromRGB(30,30,30)
-					front.BackgroundColor3 = state and library.libColor or Color3.fromRGB(15,15,15)
-					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(144, 144, 144)
+					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(255, 255, 255)
 					if args.callback then
 						args.callback(state)
 					end
@@ -283,11 +343,11 @@ function LoadUi(Name, Key)
 					button.BackgroundColor3 = Color3.fromRGB(187, 131, 255)
 					button.BackgroundTransparency = 1.000
 					button.BorderSizePixel = 0
-					button.Position = UDim2.new(-0.270902753, 0, 0, 0)
+					button.Position = UDim2.new(-0.270902753, 13, 0, 0)
 					button.Size = UDim2.new(1.27090275, 0, 1, 0)
 					button.Font = Enum.Font.Code
 					button.Text = ""
-					button.TextColor3 = Color3.fromRGB(155, 155, 155)
+					button.TextColor3 = Color3.fromRGB(255, 255, 255)
 					button.TextSize = 13.000
 					button.TextStrokeTransparency = 0.000
 					button.TextXAlignment = Enum.TextXAlignment.Right
@@ -304,7 +364,10 @@ function LoadUi(Name, Key)
 								next = false
 								library.flags[args.flag] = key
 								button.Text = keyNames[key] or key.Name
-								button.TextColor3 = Color3.fromRGB(155, 155, 155)
+								button.TextColor3 = Color3.fromRGB(255, 255, 255)
+							else 
+								button.Text = 'nil'
+								button.TextColor3 = Color3.fromRGB(255, 255, 255)
 							end
 						end
 						if not next and key == library.flags[args.flag] and args.callback then
@@ -315,8 +378,8 @@ function LoadUi(Name, Key)
 					button.MouseButton1Click:Connect(function()
 						if library.colorpicking then return end
 						library.flags[args.flag] = Enum.KeyCode.Unknown
-						button.Text = "--"
-						button.TextColor3 = library.libColor
+						button.Text = "=_="
+						button.TextColor3 = Color3.fromRGB(255, 255, 255)
 						next = true
 					end)
 
@@ -356,7 +419,7 @@ function LoadUi(Name, Key)
 
 					mid.Name = "mid"
 					mid.Parent = colorpicker
-					mid.BackgroundColor3 = Color3.fromRGB(255, 60, 40)
+					mid.BackgroundColor3 = Color
 					mid.BorderColor3 = Color3.fromRGB(30,30,30)
 					mid.BorderSizePixel = 2
 					mid.Size = UDim2.new(1, 0, 1, 0)
@@ -638,7 +701,7 @@ function LoadUi(Name, Key)
 				bg.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				bg.BorderSizePixel = 2
 				bg.Position = UDim2.new(0.02, -1, 0, 16)
-				bg.Size = UDim2.new(0, 205, 0, 10)
+				bg.Size = UDim2.new(0, 278, 0, 8)
 
 				local main = Instance.new("Frame")
 				main.Name = "main"
@@ -661,25 +724,46 @@ function LoadUi(Name, Key)
 				button.Parent = main
 				button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				button.BackgroundTransparency = 1
-				button.Size = UDim2.new(0, 208, 2, 0)
+				button.Size = UDim2.new(0, 278, 3.2, 0)
 				button.Font = Enum.Font.SourceSans
 				button.Text = ""
 				button.TextColor3 = Color3.fromRGB(0, 0, 0)
 				button.TextSize = 14
-				button.Position = UDim2.new(0, 0, 0, -7)
+				button.Position = UDim2.new(0, 0, 0, -9)
+
+				local tbutton = Instance.new("Frame")
+				tbutton.Name = "button"
+				tbutton.Parent = main
+				tbutton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				tbutton.BackgroundTransparency = 1
+				tbutton.Size = UDim2.new(0, 282, 3.2, 0)
+				tbutton.Position = UDim2.new(0, 0, 0, -9)
 
 				local valuetext = Instance.new("TextLabel")
 				valuetext.Name = "valuetext"
 				valuetext.Parent = main
 				valuetext.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				valuetext.BackgroundTransparency = 1
-				valuetext.Position = UDim2.new(0, 85, 0, -13)
+				valuetext.Position = UDim2.new(0, 125, 0, -13)
 				valuetext.Size = UDim2.new(1, 0, 0, 10)
 				valuetext.Font = Enum.Font.Code
 				valuetext.Text = '0/0'
 				valuetext.TextColor3 = Color3.fromRGB(255, 255, 255)
 				valuetext.TextSize = 10
 				valuetext.TextStrokeTransparency = 0
+
+				local valuetext2 = Instance.new("TextLabel")
+				valuetext2.Name = "valuetext"
+				valuetext2.Parent = main
+				valuetext2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				valuetext2.BackgroundTransparency = 1
+				valuetext2.Position = UDim2.new(0, 125, 0, -13)
+				valuetext2.Size = UDim2.new(1, 0, 0, 10)
+				valuetext2.Font = Enum.Font.Code
+				valuetext2.Text = '0/0'
+				valuetext2.TextColor3 = Color3.fromRGB(255, 255, 255)
+				valuetext2.TextSize = 8
+				valuetext2.TextStrokeTransparency = 0
 
 				local UIGradient = Instance.new("UIGradient")
 				UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(105, 105, 105)), ColorSequenceKeypoint.new(1, Color3.fromRGB(121, 121, 121))}
@@ -709,36 +793,44 @@ function LoadUi(Name, Key)
 					local clampedValue = math.clamp(value, minValue, maxValue)
 					local percentage = (clampedValue - minValue) / (maxValue - minValue)
 					local fillSize = UDim2.new(percentage, 0, 1, 0)
-					fill:TweenSize(fillSize, Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.025, true)
+					fill:TweenSize(fillSize, Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 0.065, true)
 					local formattedValue = string.format("%." .. (args.decimals or 0) .. "f", clampedValue)
 					valuetext.Text = formattedValue .. sub
+					valuetext2.Text = formattedValue .. sub
+					library:Tween(valuetext2, TweenInfo.new(.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(fillSize.X.Scale, -145, 0, 8)})
 					library.flags[args.flag] = clampedValue
 					if args.callback then
 						args.callback(clampedValue)
 					end
 				end
 
+				local currentValue = nil
+
 				button.MouseButton1Down:Connect(function()
 					if library.colorpicking then return end
 					dragging = true
 					while dragging do
-						updateValue(minValue + ((mouse.X - button.AbsolutePosition.X) / button.AbsoluteSize.X) * (maxValue - minValue))
+						local newValue = minValue + ((mouse.X - button.AbsolutePosition.X) / button.AbsoluteSize.X) * (maxValue - minValue)
+						if newValue ~= currentValue then
+							currentValue = newValue
+							updateValue(newValue)
+						end
 						wait()
 					end
 				end)
 
 				button.MouseButton1Up:Connect(function()
+					updateValue(minValue + ((mouse.X - button.AbsolutePosition.X) / button.AbsoluteSize.X) * (maxValue - minValue))
 					dragging = false
 				end)
 
 				button.MouseEnter:Connect(function()
 					if library.colorpicking then return end
-					if dragging or entered then return end
 					entered = true
 					main.BorderColor3 = library.libColor
 				end)
 
-				button.MouseLeave:Connect(function()
+				tbutton.MouseLeave:Connect(function()
 					entered = false
 					dragging = false
 					main.BorderColor3 = Color3.fromRGB(60, 60, 60)
@@ -760,7 +852,7 @@ function LoadUi(Name, Key)
 			end
 			function group:addList(args)
 				if not args.flag or not args.values then return warn('') end
-				groupbox.Size += UDim2.new(0, 0, 0, 35)
+				groupbox.Size += UDim2.new(0, 0, 0, 40)
 				library.multiZindex -= 1
 
 				local list = Instance.new("Frame")
@@ -775,6 +867,7 @@ function LoadUi(Name, Key)
 				local frame = Instance.new("Frame")
 				local holder = Instance.new("Frame")
 				local UIListLayout = Instance.new("UIListLayout")
+				local TweenService = game:GetService("TweenService")
 
 				list.Name = "list"
 				list.Parent = grouper
@@ -795,17 +888,17 @@ function LoadUi(Name, Key)
 				main.Name = "main"
 				main.Parent = bg
 				main.Active = true
-				main.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-				main.BorderColor3 = Color3.fromRGB(60, 60, 60)
+				main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				main.BorderColor3 = Color3.fromRGB(30, 30, 30)
 				main.Size = UDim2.new(1, 0, 1, 0)
 				main.CanvasSize = UDim2.new(0, 0, 0, 0)
-				main.ScrollBarThickness = 0
+				main.ScrollBarThickness = 1
 
 				button.Name = "button"
 				button.Parent = main
 				button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				button.BackgroundTransparency = 1.000
-				button.Size = UDim2.new(0, 191, 1, 0)
+				button.BackgroundTransparency = 1
+				button.Size = UDim2.new(0, 215, 1, 0)
 				button.Font = Enum.Font.SourceSans
 				button.Text = ""
 				button.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -858,15 +951,15 @@ function LoadUi(Name, Key)
 				frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 				frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				frame.BorderSizePixel = 2
-				frame.Position = UDim2.new(0.0299999993, -1, 0.605000019, 15)
+				frame.Position = UDim2.new(0.0299999993, -4, 0.605000019, 15)
 				frame.Size = UDim2.new(0, 203, 0, 0)
 				frame.Visible = false
 				frame.ZIndex = library.multiZindex
 
 				holder.Name = "holder"
 				holder.Parent = frame
-				holder.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-				holder.BorderColor3 = Color3.fromRGB(60, 60, 60)
+				holder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				holder.BorderColor3 = Color3.fromRGB(35, 35, 35)
 				holder.Size = UDim2.new(1, 0, 1, 0)
 
 				UIListLayout.Parent = holder
@@ -927,16 +1020,17 @@ function LoadUi(Name, Key)
 						end
 					end
 				end
-
+				local back
 				function refresh(tbl)
 					for i,v in next, holder:GetChildren() do
 						if v.ClassName == "Frame" then
 							v:Destroy()
 						end
-						frame.Size = UDim2.new(0, 203, 0, 0)
+						frame.Size = UDim2.new(0, 205, 0, 0)
 					end
 					for i,v in pairs(tbl) do
 						frame.Size += UDim2.new(0, 0, 0, 20)
+						back = frame.Size
 
 						local option = Instance.new("Frame")
 						local button_2 = Instance.new("TextButton")
@@ -981,15 +1075,37 @@ function LoadUi(Name, Key)
 				end
 
 				button.MouseButton1Click:Connect(function()
-					if not library.colorpicking then
-						frame.Visible = not frame.Visible
+					frame.Visible = not frame.Visible
+
+					if frame.Visible then
+						holder.Size = UDim2.new(1, 0, 0, 0)
+						frame.Size = UDim2.new(0, 205, 0, 0)
+
+						if not library.colorpicking then
+							local targetFrameSize = back
+							local targetHolderSize = UDim2.new(1, 0, 1, 0)
+							local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+							local tweenFrame = TweenService:Create(frame, tweenInfo, {Size = targetFrameSize})
+							local tweenHolder = TweenService:Create(holder, tweenInfo, {Size = targetHolderSize})
+
+							tweenFrame:Play()
+							tweenHolder:Play()
+
+							tweenFrame.Completed:Connect(function()
+								frame.Size = back
+								holder.Size = UDim2.new(1, 0, 1, 0)
+							end)
+						end
+					else
+						frame.Size = UDim2.new(0, 205, 0, 0)
+						holder.Size = UDim2.new(1, 0, 0, 0)
 					end
 				end)
 				button.MouseEnter:connect(function()
 					main.BorderColor3 = library.libColor
 				end)
 				button.MouseLeave:connect(function()
-					main.BorderColor3 = Color3.fromRGB(60, 60, 60)
+					main.BorderColor3 = Color3.fromRGB(35, 35, 35)
 				end)
 
 				table.insert(library.toInvis,frame)
@@ -1000,104 +1116,344 @@ function LoadUi(Name, Key)
 				updateValue(args.value or not args.multiselect and args.values[1] or "abcdefghijklmnopqrstuwvxyz")
 			end
 			function group:addTextbox(args)
-			if not args.flag then
-				warn('')
-				return
-			end
-			groupbox.Size += UDim2.new(0, 0, 0, 35)
-
-			local textbox = Instance.new("Frame")
-			local bg = Instance.new("Frame")
-			local main = Instance.new("ScrollingFrame")
-			local box = Instance.new("TextBox")
-			local gradient = Instance.new("UIGradient")
-			local text = Instance.new("TextLabel")
-
-			local function updateText()
-				if library.colorpicking then return end
-				local textValue = box.Text
-				library.flags[args.flag] = textValue
-				args.value = textValue
-				if args.callback then
-					args.callback(textValue)
+				if not args.flag then
+					warn('')
+					return
 				end
-				return textValue
-			end
+				groupbox.Size += UDim2.new(0, 0, 0, 35)
 
-			box.FocusLost:Connect(function(enterPressed)
-				if enterPressed then
-					updateText()
+				local textbox = Instance.new("Frame")
+				local bg = Instance.new("Frame")
+				local main = Instance.new("ScrollingFrame")
+				local box = Instance.new("TextBox")
+				local gradient = Instance.new("UIGradient")
+				local text = Instance.new("TextLabel")
+
+				local function updateText()
+					if library.colorpicking then return end
+					local textValue = box.Text
+					library.flags[args.flag] = textValue
+					args.value = textValue
+					if args.callback then
+						args.callback(textValue)
+					end
+					return textValue
 				end
-			end)
 
-			textbox.Name = "textbox"
-			textbox.Parent = grouper
-			textbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			textbox.BackgroundTransparency = 1.000
-			textbox.BorderSizePixel = 0
-			textbox.Size = UDim2.new(1, 0, 0, 35)
-			textbox.ZIndex = 10
+				box.FocusLost:Connect(function(enterPressed)
+					if enterPressed then
+						updateText()
+					end
+				end)
 
-			bg.Name = "bg"
-			bg.Parent = textbox
-			bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-			bg.BorderColor3 = Color3.fromRGB(0, 0, 0)
-			bg.BorderSizePixel = 2
-			bg.Position = UDim2.new(0.02, -1, 0, 16)
-			bg.Size = UDim2.new(0, 205, 0, 15)
+				textbox.Name = "textbox"
+				textbox.Parent = grouper
+				textbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				textbox.BackgroundTransparency = 1.000
+				textbox.BorderSizePixel = 0
+				textbox.Size = UDim2.new(1, 0, 0, 35)
+				textbox.ZIndex = 10
 
-			main.Name = "main"
-			main.Parent = bg
-			main.Active = true
-			main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-			main.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			main.Size = UDim2.new(1, 0, 1, 0)
-			main.CanvasSize = UDim2.new(0, 0, 0, 0)
-			main.ScrollBarThickness = 0
+				bg.Name = "bg"
+				bg.Parent = textbox
+				bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				bg.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				bg.BorderSizePixel = 2
+				bg.Position = UDim2.new(0.02, -1, 0, 16)
+				bg.Size = UDim2.new(0, 205, 0, 15)
 
-			box.Name = "box"
-			box.Parent = main
-			box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			box.BackgroundTransparency = 1.000
-			box.Selectable = false
-			box.Size = UDim2.new(1, 0, 1, 0)
-			box.Font = Enum.Font.Code
-			box.Text = args.value or ""
-			box.TextColor3 = Color3.fromRGB(255, 255, 255)
-			box.TextSize = 13.000
-			box.TextStrokeTransparency = 0.000
-			box.TextXAlignment = Enum.TextXAlignment.Left
+				main.Name = "main"
+				main.Parent = bg
+				main.Active = true
+				main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				main.BorderColor3 = Color3.fromRGB(30, 30, 30)
+				main.Size = UDim2.new(1, 0, 1, 0)
+				main.CanvasSize = UDim2.new(0, 0, 0, 0)
+				main.ScrollBarThickness = 0
 
-			gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(105, 105, 105)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(121, 121, 121))}
-			gradient.Rotation = 90
-			gradient.Name = "gradient"
-			gradient.Parent = main
+				box.Name = "box"
+				box.Parent = main
+				box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				box.BackgroundTransparency = 1.000
+				box.Selectable = false
+				box.Size = UDim2.new(1, 0, 1, 0)
+				box.Font = Enum.Font.Code
+				box.Text = args.value or ""
+				box.TextColor3 = Color3.fromRGB(255, 255, 255)
+				box.TextSize = 13.000
+				box.TextStrokeTransparency = 0.000
+				box.TextXAlignment = Enum.TextXAlignment.Left
 
-			text.Name = "text"
-			text.Parent = textbox
-			text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			text.BackgroundTransparency = 1.000
-			text.Position = UDim2.new(0.0299999993, -1, 0, 7)
-			text.ZIndex = 2
-			text.Font = Enum.Font.Code
-			text.Text = args.text or args.flag
-			text.TextColor3 = Color3.fromRGB(244, 244, 244)
-			text.TextSize = 13.000
-			text.TextStrokeTransparency = 0.000
-			text.TextXAlignment = Enum.TextXAlignment.Left
+				gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(105, 105, 105)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(121, 121, 121))}
+				gradient.Rotation = 90
+				gradient.Name = "gradient"
+				gradient.Parent = main
 
-			library.flags[args.flag] = args.value or ""
-			library.options[args.flag] = {
-				type = "textbox",
-				changeState = function(text)
-					box.Text = text
-				end,
-				skipflag = args.skipflag,
-				oldargs = args
-			}
+				text.Name = "text"
+				text.Parent = textbox
+				text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				text.BackgroundTransparency = 1.000
+				text.Position = UDim2.new(0.0299999993, -1, 0, 7)
+				text.ZIndex = 2
+				text.Font = Enum.Font.Code
+				text.Text = args.text or args.flag
+				text.TextColor3 = Color3.fromRGB(244, 244, 244)
+				text.TextSize = 13.000
+				text.TextStrokeTransparency = 0.000
+				text.TextXAlignment = Enum.TextXAlignment.Left
 
-			return updateText
-		        end
+				library.flags[args.flag] = args.value or ""
+				library.options[args.flag] = {
+					type = "textbox",
+					changeState = function(text)
+						box.Text = text
+					end,
+					skipflag = args.skipflag,
+					oldargs = args
+				}
+
+				return updateText
+			end
+			function group:addMultiTextbox(args)
+				if not args.flag then
+					warn('')
+					return
+				end
+				groupbox.Size += UDim2.new(0, 0, 0, 35)
+
+				local textbox = Instance.new("Frame")
+				local bg = Instance.new("Frame")
+				local bg1 = Instance.new("Frame")
+				local bg2 = Instance.new("Frame")
+				local bg3 = Instance.new("Frame")
+				local main = Instance.new("ScrollingFrame")
+				local main2 = Instance.new("ScrollingFrame")
+				local main3 = Instance.new("ScrollingFrame")
+				local box = Instance.new("TextBox")
+				local box2 = Instance.new("TextBox")
+				local box3 = Instance.new("TextBox")
+				local gradient = Instance.new("UIGradient")
+				local text = Instance.new("TextLabel")
+				local xtext = Instance.new("TextLabel")
+				local ytext = Instance.new("TextLabel")
+				local ztext = Instance.new("TextLabel")
+
+				local function updateText()
+					if library.colorpicking then return end
+					local textValue = box.Text
+					local textValue2 = box2.Text
+					local textValue3 = box3.Text
+					library.flags[args.flag] = {textValue, textValue2, textValue3}
+					args.value = {textValue, textValue2, textValue3}
+					if args.callback then
+						args.callback({textValue, textValue2, textValue3})
+					end
+					return {textValue, textValue2, textValue3}
+				end
+
+				box.FocusLost:Connect(function(enterPressed)
+					if enterPressed then
+						updateText()
+					end
+				end)
+
+				box2.FocusLost:Connect(function(enterPressed)
+					if enterPressed then
+						updateText()
+					end
+				end)
+
+				box3.FocusLost:Connect(function(enterPressed)
+					if enterPressed then
+						updateText()
+					end
+				end)
+
+				textbox.Name = "textbox"
+				textbox.Parent = grouper
+				textbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				textbox.BackgroundTransparency = 1.000
+				textbox.BorderSizePixel = 0
+				textbox.Size = UDim2.new(1, 0, 0, 35)
+				textbox.ZIndex = 10
+
+				bg.Name = "bg"
+				bg.Parent = textbox
+				bg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				bg.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				bg.BorderSizePixel = 0
+				bg.Transparency = 1
+				bg.Position = UDim2.new(0.02, -1, 0, 16)
+				bg.Size = UDim2.new(0, 205, 0, 15)
+
+				main.Name = "main"
+				main.Parent = bg
+				main.Active = true
+				main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				main.BorderColor3 = Color3.fromRGB(30, 30, 30)
+				main.Size = UDim2.new(1, -155, 1, 0)
+				main.CanvasSize = UDim2.new(0, 0, 0, 0)
+				main.ScrollBarThickness = 0
+
+				bg1.Name = "bg1"
+				bg1.Parent = bg
+				bg1.Active = true
+				bg1.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				bg1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				bg1.Size = UDim2.new(1, -155, 1, 0)
+				bg1.BorderSizePixel = 2
+				bg1.ZIndex = -1
+
+				bg2.Name = "bg1"
+				bg2.Parent = bg
+				bg2.Active = true
+				bg2.Position = UDim2.new(0, 77, 0, 0)
+				bg2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				bg2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				bg2.Size = UDim2.new(1, -155, 1, 0)
+				bg2.BorderSizePixel = 2
+				bg2.ZIndex = -1
+
+				bg3.Name = "bg1"
+				bg3.Parent = bg
+				bg3.Active = true
+				bg3.Position = UDim2.new(0, 155, 0, 0)
+				bg3.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				bg3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				bg3.Size = UDim2.new(1, -155, 1, 0)
+				bg3.BorderSizePixel = 2
+				bg3.ZIndex = -1
+
+				main2.Name = "main2"
+				main2.Parent = bg
+				main2.Active = true
+				main2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				main2.Position = UDim2.new(0, 77, 0, 0)
+				main2.BorderColor3 = Color3.fromRGB(30, 30, 30)
+				main2.Size = UDim2.new(1, -155, 1, 0)
+				main2.CanvasSize = UDim2.new(0, 0, 0, 0)
+				main2.ScrollBarThickness = 0
+
+				main3.Name = "main3"
+				main3.Parent = bg
+				main3.Active = true
+				main3.Position = UDim2.new(0, 155, 0, 0)
+				main3.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				main3.BorderColor3 = Color3.fromRGB(30, 30, 30)
+				main3.Size = UDim2.new(1, -155, 1, 0)
+				main3.CanvasSize = UDim2.new(0, 0, 0, 0)
+				main3.ScrollBarThickness = 0
+
+				box.Name = "box"
+				box.Parent = main
+				box.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				box.BackgroundTransparency = 1
+				box.Selectable = false
+				box.Size = UDim2.new(1, 0, 1, 0)
+				box.Font = Enum.Font.Code
+				box.Text = args.value and args.value[1] or ""
+				box.TextColor3 = Color3.fromRGB(255, 255, 255)
+				box.TextSize = 13.000
+				box.TextStrokeTransparency = 0.000
+				box.TextXAlignment = Enum.TextXAlignment.Left
+
+				xtext.Name = "xtext"
+				xtext.Parent = box
+				xtext.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				xtext.BackgroundTransparency = 1.000
+				xtext.Position = UDim2.new(0, 40, 0, 7)
+				xtext.ZIndex = 2
+				xtext.Font = Enum.Font.Code
+				xtext.Text = "X"
+				xtext.TextColor3 = Color3.fromRGB(244, 244, 244)
+				xtext.TextSize = 12.000
+				xtext.TextStrokeTransparency = 1.000
+				xtext.TextXAlignment = Enum.TextXAlignment.Left
+
+				box2.Name = "box2"
+				box2.Parent = main2
+				box2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				box2.BackgroundTransparency = 1
+				box2.Selectable = false
+				box2.Size = UDim2.new(1, 0, 1, 0)
+				box2.Font = Enum.Font.Code
+				box2.Text = args.value and args.value[2] or ""
+				box2.TextColor3 = Color3.fromRGB(255, 255, 255)
+				box2.TextSize = 13.000
+				box2.TextStrokeTransparency = 0.000
+				box2.TextXAlignment = Enum.TextXAlignment.Left
+
+				ytext.Name = "ytext"
+				ytext.Parent = box2
+				ytext.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				ytext.BackgroundTransparency = 1.000
+				ytext.Position = UDim2.new(0, 40, 0, 7)
+				ytext.ZIndex = 2
+				ytext.Font = Enum.Font.Code
+				ytext.Text = "Y"
+				ytext.TextColor3 = Color3.fromRGB(244, 244, 244)
+				ytext.TextSize = 12.000
+				ytext.TextStrokeTransparency = 1.000
+				ytext.TextXAlignment = Enum.TextXAlignment.Left
+
+				box3.Name = "box3"
+				box3.Parent = main3
+				box3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				box3.BackgroundTransparency = 1
+				box3.Selectable = false
+				box3.Size = UDim2.new(1, 0, 1, 0)
+				box3.Font = Enum.Font.Code
+				box3.Text = args.value and args.value[3] or ""
+				box3.TextColor3 = Color3.fromRGB(255, 255, 255)
+				box3.TextSize = 13.000
+				box3.TextStrokeTransparency = 0.000
+				box3.TextXAlignment = Enum.TextXAlignment.Left
+
+				ztext.Name = "ztext"
+				ztext.Parent = box3
+				ztext.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				ztext.BackgroundTransparency = 1.000
+				ztext.Position = UDim2.new(0, 40, 0, 7)
+				ztext.ZIndex = 2
+				ztext.Font = Enum.Font.Code
+				ztext.Text = "Z"
+				ztext.TextColor3 = Color3.fromRGB(244, 244, 244)
+				ztext.TextSize = 12.000
+				ztext.TextStrokeTransparency = 1.000
+				ztext.TextXAlignment = Enum.TextXAlignment.Left
+
+				gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(105, 105, 105)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(121, 121, 121))}
+				gradient.Rotation = 90
+				gradient.Name = "gradient"
+				gradient.Parent = main
+
+				text.Name = "text"
+				text.Parent = textbox
+				text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				text.BackgroundTransparency = 1.000
+				text.Position = UDim2.new(0.0299999993, -1, 0, 7)
+				text.ZIndex = 2
+				text.Font = Enum.Font.Code
+				text.Text = args.text or args.flag
+				text.TextColor3 = Color3.fromRGB(244, 244, 244)
+				text.TextSize = 13.000
+				text.TextStrokeTransparency = 0.000
+				text.TextXAlignment = Enum.TextXAlignment.Left
+
+				library.flags[args.flag] = args.value or ""
+				library.options[args.flag] = {
+					type = "textbox",
+					changeState = function(text)
+						box.Text = text[1]
+						box2.Text = text[2]
+						box3.Text = text[3]
+					end,
+					skipflag = args.skipflag,
+					oldargs = args
+				}
+
+				return updateText
+			end
 			function group:addDivider(args)
 				groupbox.Size += UDim2.new(0, 0, 0, 10)
 
@@ -1159,7 +1515,7 @@ function LoadUi(Name, Key)
 				button.Position = UDim2.new(0.16, 0, 0, 0)
 				button.Size = UDim2.new(1, 0, 1, 0)
 				button.Font = Enum.Font.Code
-				button.Text = "--"
+				button.Text = "=_="
 				button.TextColor3 = Color3.fromRGB(250, 250, 250)
 				button.TextSize = 12
 				button.TextStrokeTransparency = 1
@@ -1250,7 +1606,7 @@ function LoadUi(Name, Key)
 				button.Name = "button"
 				button.Parent = colorpicker
 				button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				button.BackgroundTransparency = 1.000
+				button.BackgroundTransparency = 1
 				button.BorderSizePixel = 0
 				button.Size = UDim2.new(1, 0, 1, 0)
 				button.Font = Enum.Font.SourceSans
@@ -1268,7 +1624,7 @@ function LoadUi(Name, Key)
 
 				mid.Name = "mid"
 				mid.Parent = colorpicker_2
-				mid.BackgroundColor3 = Color3.fromRGB(255, 60, 40)
+				mid.BackgroundColor3 = Color
 				mid.BorderColor3 = Color3.fromRGB(30,30,30)
 				mid.BorderSizePixel = 2
 				mid.Size = UDim2.new(1, 0, 1, 0)
@@ -1282,8 +1638,9 @@ function LoadUi(Name, Key)
 				button.Name = "button"
 				button.Parent = colorpicker
 				button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				button.BackgroundTransparency = 1.000
-				button.Size = UDim2.new(0, 202, 0, 22)
+				button.BackgroundTransparency = 1
+				button.Size = UDim2.new(0, 125, 0, 16)
+				button.Position = UDim2.new(0,165,0,2)
 				button.Font = Enum.Font.SourceSans
 				button.Text = ""
 				button.ZIndex = args.ontop and topStuff or jigCount
@@ -1364,16 +1721,16 @@ function LoadUi(Name, Key)
 
 				copy.Name = "copy"
 				copy.Parent = clr
-				copy.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-				copy.BackgroundTransparency = 1.000
+				copy.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				copy.BackgroundTransparency = 1
 				copy.BorderSizePixel = 0
 				copy.Size = UDim2.new(0, 129, 0, 14)
 				copy.ZIndex = 5
 				copy.Font = Enum.Font.Code
-				copy.Text = args.text or args.flag
-				copy.TextColor3 = Color3.fromRGB(100, 100, 100)
-				copy.TextSize = 14.000
-				copy.TextStrokeTransparency = 0.000
+				copy.Text = "Picker"
+				copy.TextColor3 = Color3.fromRGB(255, 255, 255)
+				copy.TextSize = 12.000
+				copy.TextStrokeTransparency = 1.000
 
 				copy.MouseButton1Click:Connect(function()
 					colorFrame.Visible = false
@@ -1392,9 +1749,10 @@ function LoadUi(Name, Key)
 				end)
 
 				local function updateValue(value,fakevalue)
-					if typeof(value) == "table" then value = fakevalue end
+					if typeof(value) == "table" then value = fakevalue end 
 					library.flags[args.flag] = value
 					front.BackgroundColor3 = value
+					copy.TextColor3 = value
 					if args.callback then
 						args.callback(value)
 					end
@@ -1412,7 +1770,7 @@ function LoadUi(Name, Key)
 						if key.UserInputType == Enum.UserInputType.MouseButton1 then
 							while heartbeat:wait() and inputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 								library.colorpicking = true
-								local percent = (hueY-hue.AbsolutePosition.Y-36)/hue.AbsoluteSize.Y
+								local percent = (hueY-hue.AbsolutePosition.Y-56)/hue.AbsoluteSize.Y
 								local num = math.max(1, math.min(7,math.floor(((percent*7+0.5)*100))/100))
 								local startC = colors[math.floor(num)]
 								local endC = colors[math.ceil(num)]
@@ -1436,7 +1794,7 @@ function LoadUi(Name, Key)
 							while heartbeat:wait() and inputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 								library.colorpicking = true
 								local xPercent = (pickerX-picker.AbsolutePosition.X)/picker.AbsoluteSize.X
-								local yPercent = (pickerY-picker.AbsolutePosition.Y-36)/picker.AbsoluteSize.Y
+								local yPercent = (pickerY-picker.AbsolutePosition.Y-58)/picker.AbsoluteSize.Y
 								local color = white:lerp(picker.BackgroundColor3, xPercent):lerp(black, yPercent)
 								updateValue(color)
 								oldpercentX,oldpercentY = xPercent,yPercent
@@ -1470,5 +1828,4 @@ function LoadUi(Name, Key)
 		return tab
 	end
 end
-
 return library
