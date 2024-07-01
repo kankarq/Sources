@@ -797,7 +797,37 @@ function LoadUi(Name, Key, Color)
 					local formattedValue = string.format("%." .. (args.decimals or 0) .. "f", clampedValue)
 					valuetext.Text = formattedValue .. sub
 					valuetext2.Text = formattedValue .. sub
-					library:Tween(valuetext2, TweenInfo.new(.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(fillSize.X.Scale, -145, 0, 8)})
+					local offset = 0
+					local offset2 = 0
+					local offset3 = 0
+					local threshold = UDim2.new(0.01, -145, 0, 8)
+					local threshold2 = UDim2.new(0.02, -145, 0, 8)
+					local threshold3 = UDim2.new(0.03, -145, 0, 8)
+					local threshold4 = UDim2.new(0.04, -145, 0, 8)
+					local threshold5 = UDim2.new(0.05, -145, 0, 8)
+					local threshold6 = UDim2.new(0.06, -145, 0, 8)
+					local threshold7 = UDim2.new(0.965, -145, 0, 8)
+					if args.decimals >= 3 then 
+						if fillSize.X.Scale >= threshold7.X.Scale then
+							offset3 = 0.0055
+						else
+							offset2 = 0.02
+						end
+					end
+					if fillSize.X.Scale <= threshold.X.Scale then 
+						offset = 0.06
+					elseif fillSize.X.Scale <= threshold2.X.Scale then
+						offset = 0.05
+					elseif fillSize.X.Scale <= threshold3.X.Scale then
+						offset = 0.04
+					elseif fillSize.X.Scale <= threshold4.X.Scale then
+						offset = 0.03
+					elseif fillSize.X.Scale <= threshold5.X.Scale then
+						offset = 0.02
+					elseif fillSize.X.Scale <= threshold6.X.Scale then
+						offset = 0.01
+					end
+					library:Tween(valuetext2, TweenInfo.new(.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(fillSize.X.Scale + offset + offset2 - offset3, -145, 0, 8)})
 					library.flags[args.flag] = clampedValue
 					if args.callback then
 						args.callback(clampedValue)
