@@ -214,116 +214,116 @@ function LoadUi(Name, Key, Color)
 
 			local group = {}
 			function group:addToggle(args)
-				if not args.flag and args.text then args.flag = args.text end
-				if not args.flag then return warn('') end
-				groupbox.Size += UDim2.new(0, 0, 0, 20)
+	if not args.flag and args.text then args.flag = args.text end
+	if not args.flag then return warn('No flag provided') end
+	groupbox.Size += UDim2.new(0, 0, 0, 20)
 
-				local toggleframe = Instance.new("Frame")
-				local tobble = Instance.new("Frame")
-				local mid = Instance.new("Frame")
-				local front = Instance.new("Frame")
-				local text = Instance.new("TextLabel")
-				local button = Instance.new("TextButton")
+	local toggleframe = Instance.new("Frame")
+	local tobble = Instance.new("Frame")
+	local mid = Instance.new("Frame")
+	local front = Instance.new("Frame")
+	local text = Instance.new("TextLabel")
+	local button = Instance.new("TextButton")
 
-				jigCount -= 1
-				library.multiZindex -= 1
+	jigCount -= 1
+	library.multiZindex -= 1
 
-				toggleframe.Name = "toggleframe"
-				toggleframe.Parent = grouper
-				toggleframe.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				toggleframe.BackgroundTransparency = 1.000
-				toggleframe.BorderSizePixel = 0
-				toggleframe.Size = UDim2.new(1, 0, 0, 20)
-				toggleframe.ZIndex = library.multiZindex
+	toggleframe.Name = "toggleframe"
+	toggleframe.Parent = grouper
+	toggleframe.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	toggleframe.BackgroundTransparency = 1.000
+	toggleframe.BorderSizePixel = 0
+	toggleframe.Size = UDim2.new(1, 0, 0, 20)
+	toggleframe.ZIndex = library.multiZindex
 
-				tobble.Name = "tobble"
-				tobble.Parent = toggleframe
-				tobble.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				tobble.BorderColor3 = Color3.fromRGB(0, 0, 0)
-				tobble.BorderSizePixel = 3
-				tobble.Position = UDim2.new(0.0299999993, 0, 0.272000015, 0)
+	tobble.Name = "tobble"
+	tobble.Parent = toggleframe
+	tobble.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	tobble.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	tobble.BorderSizePixel = 3
+	tobble.Position = UDim2.new(0.0299999993, 0, 0.272000015, 0)
+	tobble.Size = UDim2.new(0, 10, 0, 10)
 
-				tobble.Size = UDim2.new(0, 10, 0, 10)
+	mid.Name = "mid"
+	mid.Parent = tobble
+	mid.BackgroundColor3 = Color
+	mid.BorderColor3 = Color3.fromRGB(30,30,30)
+	mid.BorderSizePixel = 2
+	mid.Size = UDim2.new(0, 10, 0, 10)
 
-				mid.Name = "mid"
-				mid.Parent = tobble
-				mid.BackgroundColor3 = Color
-				mid.BorderColor3 = Color3.fromRGB(30,30,30)
-				mid.BorderSizePixel = 2
-				mid.Size = UDim2.new(0, 10, 0, 10)
+	front.Name = "front"
+	front.Parent = mid
+	front.BackgroundColor3 = Color3.fromRGB(15,15,15)
+	front.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	front.Size = UDim2.new(0, 10, 0, 10)
 
-				front.Name = "front"
-				front.Parent = mid
-				front.BackgroundColor3 = Color3.fromRGB(15,15,15)
-				front.BorderColor3 = Color3.fromRGB(0, 0, 0)
-				front.Size = UDim2.new(0, 10, 0, 10)
+	text.Name = "text"
+	text.Parent = toggleframe
+	text.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+	text.BackgroundTransparency = 1.000
+	text.Position = UDim2.new(0, 28, 0, 0)
+	text.Size = UDim2.new(0, 0, 1, 2)
+	text.Font = Enum.Font.Code
+	text.Text = args.text or args.flag
+	text.TextColor3 = Color3.fromRGB(255, 255, 255)
+	text.TextSize = 13.000
+	text.TextStrokeTransparency = 1.000
+	text.TextXAlignment = Enum.TextXAlignment.Left
 
-				text.Name = "text"
-				text.Parent = toggleframe
-				text.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-				text.BackgroundTransparency = 1.000
-				text.Position = UDim2.new(0, 28, 0, 0)
-				text.Size = UDim2.new(0, 0, 1, 2)
-				text.Font = Enum.Font.Code
-				text.Text = args.text or args.flag
-				text.TextColor3 = Color3.fromRGB(255, 255, 255)
-				text.TextSize = 13.000
-				text.TextStrokeTransparency = 1.000
-				text.TextXAlignment = Enum.TextXAlignment.Left
+	button.Name = "button"
+	button.Parent = toggleframe
+	button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	button.BackgroundTransparency = 1.000
+	button.BorderSizePixel = 0
+	button.Size = UDim2.new(0, 101, 1, 0)
+	button.Font = Enum.Font.SourceSans
+	button.Text = ""
+	button.TextColor3 = Color3.fromRGB(0, 0, 0)
+	button.TextSize = 14.000
 
-				button.Name = "button"
-				button.Parent = toggleframe
-				button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	if args.disabled then
+		button.Visible = false
+		text.TextColor3 = library.disabledcolor
+		text.Text = args.text
+		return
+	end
 
-				button.BackgroundTransparency = 1.000
-				button.BorderSizePixel = 0
-				button.Size = UDim2.new(0, 101, 1, 0)
-				button.Font = Enum.Font.SourceSans
-				button.Text = ""
-				button.TextColor3 = Color3.fromRGB(0, 0, 0)
-				button.TextSize = 14.000
+	local state = args.initialState or false
+	function toggle(newState)
+		state = newState
+		library.flags[args.flag] = state
+		front.BackgroundColor3 = state and library.libColor or Color3.fromRGB(15,15,15)
+		text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(255, 255, 255)
+		if args.callback then
+			args.callback(state)
+		end
+	end
 
-				if args.disabled then
-					button.Visible = false
-					text.TextColor3 = library.disabledcolor
-					text.Text = args.text
-					return end
+	button.MouseButton1Click:Connect(function()
+		state = not state
+		toggle(state)
+		if state then 
+			library:Tween(front, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = library.libColor})
+		else 
+			front.BackgroundColor3 = Color3.fromRGB(15,15,15)
+		end
+		front.Name = state and "accent" or "back"
+	end)
 
-				local state = false
-				function toggle(newState)
-					state = newState
-					library.flags[args.flag] = state
-					front.BackgroundColor3 = state and library.libColor or Color3.fromRGB(15,15,15)
-					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(255, 255, 255)
-					if args.callback then
-						args.callback(state)
-					end
-				end
-				button.MouseButton1Click:Connect(function()
-					state = not state
-					if state then 
-						library:Tween(front, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = library.libColor})
-					else 
-						front.BackgroundColor3 = Color3.fromRGB(15,15,15)
-					end
-					front.Name = state and "accent" or "back"
-					library.flags[args.flag] = state
-					mid.BorderColor3 = Color3.fromRGB(30,30,30)
-					text.TextColor3 = state and Color3.fromRGB(244, 244, 244) or Color3.fromRGB(255, 255, 255)
-					if args.callback then
-						args.callback(state)
-					end
-				end)
-				button.MouseEnter:connect(function()
-					mid.BorderColor3 = library.libColor
-				end)
-				button.MouseLeave:connect(function()
-					mid.BorderColor3 = Color3.fromRGB(30,30,30)
-				end)
+	button.MouseEnter:Connect(function()
+		mid.BorderColor3 = library.libColor
+	end)
 
-				library.flags[args.flag] = false
-				library.options[args.flag] = {type = "toggle",changeState = toggle,skipflag = args.skipflag,oldargs = args}
-				local toggle = {}
+	button.MouseLeave:Connect(function()
+		mid.BorderColor3 = Color3.fromRGB(30,30,30)
+	end)
+
+	toggle(state)  -- Initialize the state based on the provided initialState
+	library.flags[args.flag] = state
+	library.options[args.flag] = {type = "toggle", changeState = toggle, skipflag = args.skipflag, oldargs = args}
+	return toggle
+end
+
 				function toggle:addKeybind(args)
 					if not args.flag then return warn('') end
 					local next = false
