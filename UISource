@@ -325,9 +325,6 @@ function LoadUi(Name, Key, Color)
     library.flags[args.flag] = state
     library.options[args.flag] = {type = "toggle", changeState = toggle, skipflag = args.skipflag, oldargs = args}
     local toggle = {}
-end
-
-
 				function toggle:addKeybind(args)
 					if not args.flag then return warn('') end
 					local next = false
