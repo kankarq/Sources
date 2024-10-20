@@ -1,6 +1,3 @@
--- fixed and edited by @fwedsw 
--- im not sure who to credit sorry 
-
 local inputService   = game:GetService("UserInputService")
 local runService     = game:GetService("RunService")
 local tweenService   = game:GetService("TweenService")
